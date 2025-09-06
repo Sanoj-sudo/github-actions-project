@@ -1,12 +1,26 @@
-name: GitHub Actions Demo
-run-name: "Run number: ${{ github.run_number }} triggered by ${{ github.event_name }} event"
-on: [push]
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy (dev, staging, prod)'
+        required: true
+        default: 'dev'
+      debug:
+        description: 'Enable debug mode?'
+        required: false
+        default: 'false'
+
 jobs:
-  Explore-GitHub-Actions:
+  run-manual-job:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository code
-        uses: actions/checkout@v4
-      - name: List files in the repository
+      - name: Print input values
         run: |
-          ls ${{ github.workspace }}
+          echo "Environment: ${{ github.event.inputs.environment }}"
+          echo "Debug Mode: ${{ github.event.inputs.debug }}"
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: List files
+        run: ls -alh
