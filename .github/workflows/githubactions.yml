@@ -24,3 +24,13 @@ on:
           - dev
           - staging
           - prod
+
+jobs:
+  run-manual-dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print inputs
+        run: |
+          echo "Log Level: ${{ github.event.inputs.logLevel }}"
+          echo "Tags: ${{ github.event.inputs.tags }}"
+          echo "Environment: ${{ github.event.inputs.environment }}"
