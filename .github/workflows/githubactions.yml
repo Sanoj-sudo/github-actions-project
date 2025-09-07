@@ -4,33 +4,33 @@ on:
   workflow_dispatch:
     inputs:
       logLevel:
-        description: 'Log level'
+        description: 'Log level (recommended: info, warning, debug) or provide custom value'
         required: true
         default: 'warning'
-        type: choice
-        options:
-          - info
-          - warning
-          - debug
+        type: string
       tags:
-        description: 'Test scenario tags'
+        description: 'Run with tags?'
         required: false
         type: boolean
       environment:
-        description: 'Environment to run tests against'
+        description: 'Environment (recommended: dev, staging, prod) or provide custom value'
         required: true
-        type: choice
-        options:
-          - dev
-          - staging
-          - prod
+        default: 'dev'
+        type: string
 
 jobs:
-  run-manual-dispatch:
+  run:
     runs-on: ubuntu-latest
     steps:
-      - name: Print inputs
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Show provided inputs
         run: |
           echo "Log Level: ${{ github.event.inputs.logLevel }}"
           echo "Tags: ${{ github.event.inputs.tags }}"
           echo "Environment: ${{ github.event.inputs.environment }}"
+
+      - name: Example conditional step (only runs if environment == prod)
+        if: ${{ github.event.inputs.environment == 'prod' }}
+        run: echo "🚀 Running production-specific job with logLevel=${{ github.event.inputs.logLevel }}"
